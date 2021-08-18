@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <script type="application/ld+json">
-      {{ buildSchema }}
+
+    <script type="application/ld+json" v-html="buildSchema">
+
     </script>
-  </div>
+
 </template>
 
 <script>
@@ -14,14 +14,26 @@
         required: true
       }
     },
+    inject: ['dataset',
+      'pbndataset',
+      'site',
+        'items',
+    ],
     data () {
       return {
-        msg: 'Contact data rendered.',
-        buildSchema: null
+        msg: 'JsonLD data rendered.',
+        buildSchema: "",
+
       }
     },
+    // mounted() {
+    //   this.schemaData();
+    // },
+    watch:{
+      items: 'schemaData',
+    },
     methods: {
-      schemaData: function() {
+      schemaData: function () {
         let self = this;
 
         var output = {
@@ -36,20 +48,20 @@
             "publisher": {
               "@type": "Organization",
               "name": "Neotoma Paleoecological Database",
-              "alternateName":"Neotoma",
-              "description":"The Neotoma Paleoecology Database and Community is an online hub for data, research, education, and discussion about paleoenvironments.",
+              "alternateName": "Neotoma",
+              "description": "The Neotoma Paleoecology Database and Community is an online hub for data, research, education, and discussion about paleoenvironments.",
               "url": "http://neotomadb.org"
             },
             "funder": {
-              "@type":"Organization",
-              "name":"National Sciences Foundation",
+              "@type": "Organization",
+              "name": "National Sciences Foundation",
               "alternateName": "NSF",
               "url": "http://nsf.gov"
             }
           },
           "about": "",
-          "distribution":{
-            "@type":"DataDownload",
+          "distribution": {
+            "@type": "DataDownload",
             "contentUrl": this.items.currjson,
             "datePublished": "2018-02-02 14:24:27",
             "inLanguage": "en",
@@ -59,10 +71,10 @@
             "@type": "Place",
             "name": this.items.sitename + " " + this.items.datasettype + " dataset",
             "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": this.items.coordinates[0],
-                "longitude": this.items.coordinates[1],
-                "elevation": this.items.altitude
+              "@type": "GeoCoordinates",
+              "latitude": this.items.coordinates[0],
+              "longitude": this.items.coordinates[1],
+              "elevation": this.items.altitude
             }
           }
         }
@@ -74,18 +86,17 @@
           }
 
           output.identifier = {
-              "@type": "PropertyValue",
-              "propertyID": "http://purl.org/spar/datacite/doi",
-              "url": this.items.dataset[0].doi[0],
-              "value": this.items.dataset[0].doi[1]
+            "@type": "PropertyValue",
+            "propertyID": "http://purl.org/spar/datacite/doi",
+            "url": this.items.dataset[0].doi[0],
+            "value": this.items.dataset[0].doi[1]
           }
         }
 
         self.buildSchema = output;
       },
-      mounted() {
-        this.schemaData();
-      }
-  }
+    },
+
+
 }
 </script>

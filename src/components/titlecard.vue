@@ -69,8 +69,8 @@
     </div>
     <div v-if="items">
       <div v-if="items.doi.length > 0">
-        <script type="application/ld+json">
-          {{ datasetDOIs }}
+        <script type="application/ld+json" v-html="datasetDOIs">
+
         </script>
       </div>
     </div>
@@ -105,7 +105,10 @@
     methods: {
       datasetDOI: function() {
         let self = this;
-        self.datasetDOIs = 'https://dx.doi.org/' + self.items.datasets[0].doi[0];
+        if (self.items.datasets !== undefined) {
+          self.datasetDOIs = 'https://dx.doi.org/' + self.items.datasets[0].doi[0];
+        }
+
         /*fetch(self.items.doi[0], {headers: {'Accept': 'application/vnd.schemaorg.ld+json'}})
         .then(data => { return data.text() })
         .then(function(text) { self.datasetDOIs = text})
